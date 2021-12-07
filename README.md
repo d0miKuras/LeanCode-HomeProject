@@ -8,7 +8,8 @@ Implement a JSON API with two endpoints:
 All '/history' requests must be preserved accross application runs. No authorization needed.
 
 ## Prerequisites:
-* Docker
+* Docker (`apt-get install docker`)
+* Docker-compose (`apt-get install docker-compose`)
 * [optional] Postman
 
 ## Installation:
