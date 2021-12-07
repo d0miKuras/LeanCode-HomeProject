@@ -30,6 +30,7 @@ namespace LeanCode_HomeProject.Controllers
                 if (!response.IsSuccessStatusCode) return null; // Checks if we got a 200 OK
 
                 var result = await response.Content.ReadAsStringAsync();
+                if (!result.StartsWith("[")) return new JsonResult("Subreddit does not exist!"); ;
                 JArray arr = JArray.Parse(result); // get a string from reddit api
                 JObject jpost = JObject.Parse(arr[0]["data"]["children"][0]["data"].ToString()); // filter out metadata
                 string url = jpost["url"].ToString(); // get the image url
