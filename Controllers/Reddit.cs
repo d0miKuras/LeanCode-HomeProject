@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 
@@ -12,11 +11,21 @@ namespace LeanCode_HomeProject.Controllers
     [Route("[controller]")]
     public class Reddit : ControllerBase
     {
-        [HttpGet("{subreddit}")]
-        public async Task<ActionResult> GetAsync(string subreddit)
+        IConfiguration _config;
+        RequestDbContext _context;
+
+        public Reddit(IConfiguration config, RequestDbContext context)
+        {
+            _config = config;
+            _context = context;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetAsync()
         {
             using (HttpClient client = new HttpClient())
             {
+                string subreddit = _config.GetValue<string>("Subreddit");
                 var response = await client.GetAsync($"https://reddit.com/r/{subreddit}/random.json");
                 if (!response.IsSuccessStatusCode) return null; // Checks if we got a 200 OK
 
@@ -30,6 +39,15 @@ namespace LeanCode_HomeProject.Controllers
                 //     URL = url,
                 //     RequestDate = DateTime.UtcNow
                 // };
+
+                RedditPost post = new RedditPost
+                {
+                    URL = url,
+                    RequestDate = DateTime.UtcNow,
+                    Subreddit = subreddit
+                };
+                await _context.RedditPosts.AddAsync(post);
+                await _context.SaveChangesAsync();
 
                 return new JsonResult(url);
 
