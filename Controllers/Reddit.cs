@@ -9,12 +9,12 @@ namespace LeanCode_HomeProject.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class Reddit : ControllerBase
+    public class Random : ControllerBase
     {
         IConfiguration _config;
         RequestDbContext _context;
 
-        public Reddit(IConfiguration config, RequestDbContext context)
+        public Random(IConfiguration config, RequestDbContext context)
         {
             _config = config;
             _context = context;
