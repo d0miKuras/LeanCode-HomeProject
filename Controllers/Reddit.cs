@@ -27,37 +27,25 @@ namespace LeanCode_HomeProject.Controllers
             {
                 string subreddit = _config.GetValue<string>("Subreddit");
                 var response = await client.GetAsync($"https://reddit.com/r/{subreddit}/random.json");
-                if (!response.IsSuccessStatusCode) return null; // Checks if we got a 200 OK
+                if (!response.IsSuccessStatusCode) return null; // Checks if we got a 200 OK.
 
                 var result = await response.Content.ReadAsStringAsync();
                 if (!result.StartsWith("[")) return new JsonResult("Subreddit does not exist!"); ;
-                JArray arr = JArray.Parse(result); // get a string from reddit api
-                JObject jpost = JObject.Parse(arr[0]["data"]["children"][0]["data"].ToString()); // filter out metadata
-                string url = jpost["url"].ToString(); // get the image url
+                JArray arr = JArray.Parse(result); // Get a string from reddit api.
+                JObject jpost = JObject.Parse(arr[0]["data"]["children"][0]["data"].ToString()); // Filter out metadata.
+                string url = jpost["url"].ToString(); // Get the image url.
 
-                // RedditPost post = new RedditPost
-                // {
-                //     URL = url,
-                //     RequestDate = DateTime.UtcNow
-                // };
-
-                RedditPost post = new RedditPost
+                RedditPost post = new RedditPost // Create an object to add to the database.
                 {
                     URL = url,
                     RequestDate = DateTime.UtcNow,
                     Subreddit = subreddit
                 };
-                await _context.RedditPosts.AddAsync(post);
-                await _context.SaveChangesAsync();
+                await _context.RedditPosts.AddAsync(post); // Add the created object.
+                await _context.SaveChangesAsync(); // Save the database.
 
                 return new JsonResult(url);
-
             }
-
-
-
-
         }
-
     }
 }

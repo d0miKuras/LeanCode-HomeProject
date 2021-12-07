@@ -20,7 +20,7 @@ namespace LeanCode_HomeProject
         [HttpGet]
         public async Task<IEnumerable<RedditPost>> GetAsync()
         {
-            var history = await _context.RedditPosts.ToArrayAsync();
+            var history = await _context.RedditPosts.ToArrayAsync(); // Just pulls the whole table.
             return history;
         }
     }
